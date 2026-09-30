@@ -1,0 +1,83 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const giftGrid = document.getElementById("giftGrid");
+  const huntMessage = document.getElementById("huntMessage");
+
+  if (!giftGrid || !huntMessage) return;
+
+  // 1. Randomly assign the correct box index between 0 and 4 on every refresh
+  const correctIndex = Math.floor(Math.random() * 5);
+
+  // 2. Load and extend incorrect hint messages
+  const baseWrongMessages = (typeof BirthdayConfig !== "undefined" && BirthdayConfig.wrongGiftMessages)
+    ? BirthdayConfig.wrongGiftMessages
+    : ["不是这个，再试试。", "兄弟，别急。", "快了，就差一点。", "继续找。"];
+  
+  const wrongMessages = [...baseWrongMessages, "这一盒还不是，继续找。"];
+
+  // Array to keep track of already clicked/opened boxes
+  const clickedIndices = [];
+  let huntCompleted = false;
+
+  function createGiftBox(index) {
+    const button = document.createElement("button");
+    button.className = "mini-gift";
+    button.type = "button";
+    button.setAttribute("aria-label", `礼物盒 ${index + 1}`);
+    button.innerHTML = `
+      <span class="luxury-gift" aria-hidden="true">
+        <span class="gift-glow"></span>
+        <img src="luxury_gift_box.png" class="gift-slice gift-lid-img" alt="" />
+        <img src="luxury_gift_box.png" class="gift-slice gift-body-img" alt="" />
+      </span>
+    `;
+
+    button.addEventListener("click", () => {
+      // Guard clauses to prevent clicking completed games or double clicks
+      if (huntCompleted) return;
+      if (clickedIndices.includes(index)) return;
+
+      // Register index as clicked and disable box immediately
+      clickedIndices.push(index);
+      button.disabled = true;
+      button.style.pointerEvents = "none";
+
+      if (index === correctIndex) {
+        // Success path
+        huntCompleted = true;
+        button.classList.add("is-correct");
+        huntMessage.innerHTML = `找到了，下一页在等你。 <span style="color: #ff527c; display: inline-flex; align-items: center; vertical-align: middle; margin-left: 0.35rem; margin-top: -0.25rem;"><svg viewBox="0 0 24 24" fill="currentColor" style="width: 1.4rem; height: 1.4rem;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>`;
+
+        if (navigator.vibrate) {
+          navigator.vibrate([100, 50, 100]);
+        }
+
+        // Wait 1.5 seconds, then transition to Chapter 3
+        setTimeout(() => {
+          if (typeof navigateWithTransition === "function") {
+            navigateWithTransition("story.html");
+          } else {
+            window.location.href = "story.html";
+          }
+        }, 1500);
+      } else {
+        // Incorrect path: Trigger open-and-disabled visual shake state
+        button.classList.add("is-wrong");
+
+        // Pick one random cute message
+        const randomMsg = wrongMessages[Math.floor(Math.random() * wrongMessages.length)];
+        huntMessage.textContent = randomMsg;
+
+        if (navigator.vibrate) {
+          navigator.vibrate(50);
+        }
+      }
+    });
+
+    return button;
+  }
+
+  // Generate the 5 randomized hunt slots
+  for (let i = 0; i < 5; i++) {
+    giftGrid.appendChild(createGiftBox(i));
+  }
+});

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="选一只礼物盒，继续这段生日旅程。"
+    />
+    <title>第二页：生日彩蛋</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Great+Vibes&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/shared.css" />
+    <link rel="stylesheet" href="css/gift.css" />
+  </head>
+  <body>
+    <main class="journey" data-chapter="2">
+      <section class="memory-hunt-level" aria-label="生日彩蛋小游戏">
+        <div class="level-shell">
+          <div class="level-heading">
+            <p class="level-kicker">生日彩蛋</p>
+            <h2>邓嘉富，成功升了一岁。恭喜成年。</h2>
+            <p>选一只礼物盒，下一段祝福藏在其中。</p>
+          </div>
+
+          <div id="giftGrid" class="gift-grid" aria-live="polite"></div>
+          <p id="huntMessage" class="hunt-message">点一只礼物盒试试。</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/shared.js"></script>
+    <script src="js/gift.js"></script>
+  </body>
+</html>

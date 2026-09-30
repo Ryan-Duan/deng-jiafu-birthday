@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>邓嘉富的生日惊喜</title>
+    <style>
+      html, body, iframe { width: 100%; height: 100%; margin: 0; border: 0; background: #08050f; }
+      iframe { display: block; }
+    </style>
+  </head>
+  <body>
+    <audio id="journey-music" loop preload="auto"></audio>
+    <iframe id="journey-frame" src="index.html" title="邓嘉富的生日惊喜" allow="autoplay"></iframe>
+    <script>
+      const journeyMusic = document.getElementById("journey-music");
+      let activeSource = "";
+
+      const playMusic = () => {
+        journeyMusic.play().catch(() => {
+          // A following tap in the embedded page retries playback if needed.
+        });
+      };
+
+      window.addEventListener("message", (event) => {
+        const data = event.data || {};
+        if (data.type === "birthday-music-ready" && data.source) {
+          if (activeSource !== data.source) {
+            activeSource = data.source;
+            journeyMusic.src = data.source;
+            journeyMusic.volume = 0.75;
+          }
+        }
+        if (data.type === "birthday-music-play") playMusic();
+      });
+    </script>
+  </body>
+</html>
